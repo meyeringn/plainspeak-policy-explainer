@@ -264,6 +264,28 @@
     clip:rect(0,0,0,0); white-space:nowrap;
   }
   .copy-feedback{ font-size:0.85rem; color:var(--good); margin-left:8px; }
+
+  .print-only{ display:none; }
+
+  @media print{
+    .skip-link, .privacy-note, #input-section, .btn-row, .stamp, footer.credit, details.about summary, #s3-label, label[for="rewrite-text"]{
+      display:none !important;
+    }
+    body{ background:#fff; padding:0; }
+    .sheet{ box-shadow:none; border:none; max-width:100%; padding:0; }
+    .sheet::before{ display:none; }
+    textarea{ display:none !important; }
+    .print-only{ display:block !important; }
+    #print-original, #print-rewrite{
+      white-space:pre-wrap; font-size:0.92rem; border:1px solid #999; padding:10px;
+    }
+    .print-block{ margin-bottom:18px; }
+    .print-block h3{
+      font-family:var(--font-display); font-size:0.8rem; text-transform:uppercase;
+      letter-spacing:0.04em; border-bottom:1px solid #999; padding-bottom:4px; margin-bottom:8px;
+    }
+    details.about{ border-top:1px solid #999; margin-top:16px; padding-top:10px; }
+  }
 </style>
 </head>
 <body>
@@ -275,12 +297,13 @@
       <p class="eyebrow">Form PL-1 · Policy Explainer · Civic Tech Project Series</p>
       <h1>PlainSpeak</h1>
       <p class="tagline">Paste a policy, ordinance, or public notice. Get its reading level, a jargon glossary, and a plain-language draft — instantly.</p>
+      <p class="print-only" id="print-date-line"></p>
     </div>
     <p class="privacy-note">Runs entirely in your browser.<br>Nothing is uploaded, logged, or stored.</p>
   </header>
 
   <main id="main">
-    <section aria-labelledby="s1-label">
+    <section id="input-section" aria-labelledby="s1-label">
       <p class="section-label" id="s1-label"><span class="num">1</span> Paste the text</p>
       <label class="field-label" for="input-text">Text to check</label>
       <textarea id="input-text" placeholder="Paste a section of an ordinance, notice, policy memo, or public communication here…"></textarea>
@@ -295,9 +318,20 @@
     <section id="results" aria-labelledby="s2-label">
       <p class="section-label" id="s2-label"><span class="num">2</span> The reading</p>
 
+      <div class="btn-row share-row">
+        <button type="button" class="ghost" id="copy-link-btn">Copy shareable link</button>
+        <button type="button" class="ghost" id="print-btn">Print report</button>
+        <span class="copy-feedback sr-only" id="link-feedback" role="status"></span>
+      </div>
+
       <div class="stat-grid" id="stat-grid"></div>
 
       <div class="interpretation" id="interpretation" role="status"></div>
+
+      <div class="print-only print-block">
+        <h3>Original text analyzed</h3>
+        <div id="print-original"></div>
+      </div>
 
       <div class="stamp-zone">
         <div class="stamp" id="stamp" aria-hidden="true"></div>
@@ -307,9 +341,13 @@
       <ul class="jargon-list" id="jargon-list"></ul>
 
       <div class="rewrite-box" style="margin-top:24px;">
-        <p class="section-label"><span class="num">3</span> Plain-language draft</p>
+        <p class="section-label" id="s3-label"><span class="num">3</span> Plain-language draft</p>
         <label class="field-label" for="rewrite-text">Editable suggested rewrite — review before using</label>
         <textarea id="rewrite-text"></textarea>
+        <div class="print-only print-block">
+          <h3>Plain-language draft</h3>
+          <div id="print-rewrite"></div>
+        </div>
         <div class="btn-row">
           <button type="button" class="ghost" id="copy-btn">Copy text</button>
           <button type="button" class="ghost" id="download-btn">Download .txt</button>
@@ -471,6 +509,11 @@
   var rewriteText = $('rewrite-text');
   var liveSummary = $('live-summary');
   var copyFeedback = $('copy-feedback');
+  var linkFeedback = $('link-feedback');
+  var printOriginal = $('print-original');
+  var printRewrite = $('print-rewrite');
+  var printDateLine = $('print-date-line');
+  var aboutDetails = document.querySelector('details.about');
 
   var SAMPLE = "Pursuant to Section 4 of the ordinance, the applicant shall, prior to the commencement of any construction activity, ascertain whether the proposed development is in accordance with the applicable zoning requisites. Notwithstanding the foregoing, an exemption may be granted in the event that the Commission determines, in its sole discretion, that the proposed utilization of the parcel is consistent with the aforementioned comprehensive plan. The applicant must facilitate timely submission of all requisite documentation, and the review shall be conducted expeditiously by designated staff.";
 
@@ -602,6 +645,69 @@
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });
+
+  function needsAnalysisFirst(feedbackEl){
+    feedbackEl.textContent = 'Check some text first.';
+    feedbackEl.classList.remove('sr-only');
+    setTimeout(function(){
+      feedbackEl.classList.add('sr-only');
+      feedbackEl.textContent = '';
+    }, 2500);
+  }
+
+  $('copy-link-btn').addEventListener('click', function(){
+    if (!results.classList.contains('visible')){
+      needsAnalysisFirst(linkFeedback);
+      return;
+    }
+    var link = window.location.origin + window.location.pathname + '#t=' + encodeURIComponent(inputText.value);
+    function done(msg){
+      linkFeedback.textContent = msg;
+      linkFeedback.classList.remove('sr-only');
+      setTimeout(function(){
+        linkFeedback.classList.add('sr-only');
+        linkFeedback.textContent = '';
+      }, 3000);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(link).then(function(){ done('Link copied — paste it anywhere.'); }, function(){
+        window.prompt('Copy this link:', link);
+      });
+    } else {
+      window.prompt('Copy this link:', link);
+    }
+  });
+
+  $('print-btn').addEventListener('click', function(){
+    if (!results.classList.contains('visible')){
+      needsAnalysisFirst(linkFeedback);
+      return;
+    }
+    printOriginal.textContent = inputText.value;
+    printRewrite.textContent = rewriteText.value;
+    printDateLine.textContent = 'Report generated ' + new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) + '.';
+    if (aboutDetails) aboutDetails.open = true;
+    window.print();
+  });
+
+  function loadFromHash(){
+    var hash = window.location.hash;
+    if (hash && hash.indexOf('#t=') === 0){
+      try {
+        var decoded = decodeURIComponent(hash.slice(3));
+        if (decoded && decoded.trim().length > 0){
+          inputText.value = decoded;
+          renderResults(decoded);
+          setTimeout(function(){
+            results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      } catch (e) {
+        // Malformed or unsupported hash — fail silently, leave the form empty.
+      }
+    }
+  }
+  loadFromHash();
 
 })();
 </script>

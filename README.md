@@ -2,7 +2,7 @@
 
 A free, browser-only tool that scores any policy, ordinance, or public notice for reading level, flags common bureaucratic jargon, and generates a plain-language first draft — all in real time, with nothing uploaded anywhere.
 
-**Live demo:**`https://meyeringn.github.io/plainspeak-policy-explainer/`
+**Live demo:**[plainspeak policy explainer](https://meyeringn.github.io/plainspeak-policy-explainer/)
 
 ## Why this exists
 

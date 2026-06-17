@@ -16,6 +16,8 @@ This is part of an ongoing series of small, free civic tech tools — see [githu
 2. **Get a reading-level score** — Flesch-Kincaid Grade Level and Flesch Reading Ease, plus word/sentence counts and a complex-word percentage.
 3. **See the jargon** — terms matched against a curated glossary of common bureaucratic/legal language, each with a plain-language alternative.
 4. **Get a draft rewrite** — jargon swapped out and some long sentences split, as an editable starting point.
+5. **Share the result** — "Copy shareable link" encodes the text into the URL itself (in the hash, so it never touches a server) — open the link and the same analysis reproduces instantly.
+6. **Print a clean report** — "Print report" strips out all the buttons and input controls and formats a one-page-style readout (scores, jargon list, full rewrite, methodology) suitable for attaching to testimony, a memo, or an email.
 
 ## Methodology and sources (read this before you trust the numbers)
 
@@ -29,7 +31,7 @@ Being upfront about how this works matters more than the tool looking polished:
 
 ## Privacy
 
-There is no backend, no analytics, no cookies, and no account. Every calculation happens in the browser's JavaScript. Nothing you paste is ever sent anywhere — you can confirm this by reading the single `index.html` file; there are no network calls in the code except loading two Google Fonts.
+There is no backend, no analytics, no cookies, and no account. Every calculation happens in the browser's JavaScript. Nothing you paste is ever sent anywhere — you can confirm this by reading the single `index.html` file; there are no network calls in the code except loading two Google Fonts. The shareable-link feature encodes text into the URL fragment (after the `#`), which browsers never send to a server, so this stays true even when sharing.
 
 ## Deploying this yourself
 
@@ -47,6 +49,7 @@ That's it — it's a single static HTML file.
 - The syllable-counting heuristic can misjudge unusual or technical words.
 - The rewrite is a draft, not a finished product — always have a person review it before it goes public.
 - This tool measures *reading difficulty*, not clarity, accuracy, or whether the underlying policy itself is fair or sound. Those still require human judgment.
+- Very long pasted documents will produce a very long shareable link. Most modern browsers handle this fine, but extremely long links can behave unreliably in some messaging apps.
 
 ## Credit
 

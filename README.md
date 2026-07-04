@@ -1,6 +1,6 @@
 # PlainSpeak Policy Explainer
 
-**A free, browser-only tool that scores public policy text for reading level, flags bureaucratic jargon, and drafts a plain-language rewrite — then shows you exactly how many grade levels of difficulty it removed.**
+**A free, browser-only civic accessibility tool that explains public policy in plain language, scores reading difficulty, identifies bureaucratic jargon, and helps more people understand the laws that affect their lives.**
 
 🔗 **Live tool:** https://meyeringn.github.io/plainspeak-policy-explainer/
 
@@ -10,80 +10,212 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ---
+Why this exists
 
-## Why this exists
+Government can’t be truly accessible if people can’t understand what it writes.
 
-Most U.S. adults read most comfortably at about a 7th-to-8th-grade level. A lot of government writing lands several grades above that — which means the people a notice is legally meant to inform are the ones most likely to skim it, misread it, or give up.
+Most U.S. adults read comfortably around a 7th or 8th grade reading level, yet many ordinances, agency policies, legal notices, and public documents are written several grades above that. The people these documents are intended to inform are often the ones most likely to struggle reading them.
 
-That gap isn't a literacy failure on the reader's side. It's a design failure on the institution's side. It hits hardest for Disabled people, people with cognitive disabilities, and people reading in a second language — the exact communities public policy most often affects.
+That isn’t a literacy problem.
 
-PlainSpeak treats clear writing as a civic access issue, not a style preference. Paste a dense ordinance, public notice, or policy and the tool does three things: it scores how hard the text is to read, highlights the jargon, and drafts a plainer first version — so you can see the problem *and* a path out of it.
+It’s a communication problem.
 
-## What it does
+PlainSpeak treats plain language as civic infrastructure. Clear writing helps Disabled people, people learning English, older adults, students, busy parents, and honestly anyone trying to understand how government affects their daily life.
 
-- **Scores the reading level** using the Flesch–Kincaid grade-level formula and the Flesch Reading Ease score.
-- **Flags bureaucratic jargon** against a curated plain-language dictionary, with the everyday swap shown for each term.
-- **Drafts a plain-language first version** entirely with rules — no AI call, nothing uploaded.
-- **Shows the before/after grade drop** on an animated reading-grade meter, with the difficulty difference stated in plain numbers.
-- **Translates the score into stakes** — turning a grade number into a sentence about who gets left out.
-- **Loads founding-document excerpts** — the Declaration of Independence, the Articles of Confederation, the Constitution (Preamble + Article I, Section 8), and the Emancipation Proclamation are one click away, so you can see how 18th- and 19th-century legal language scores next to a modern ordinance.
-- **Shares a specific analysis** — "Copy share link" puts the loaded text (or founding-document key) into the URL, so you can send someone the exact before/after you're looking at.
+The goal isn’t to replace official documents.
 
-Everything runs in your browser. Your text never leaves the page except into the link you choose to copy and send.
+It’s to make them understandable.
 
-## Built to be read every way
+⸻
 
-The tool is also a small demonstration of the accessibility it argues for. It includes:
+Features
 
-- A **dyslexia-friendly font** toggle (OpenDyslexic, with a legible fallback).
-- A **high-contrast** mode.
-- **Text-size** controls.
-- A **July 4th theme** toggle — a dignified navy/cream/brick-red "founding parchment" palette, user-controlled and defaulted on for the 2026 holiday window (see Maintenance notes below for how to retire it).
-- A skip link, semantic landmarks, and a clear heading order.
-- **Screen-reader announcements** — results are read aloud through a live region when analysis finishes.
-- Jargon flagged with an **underline and a label**, never by color alone.
-- Visible keyboard focus, and reduced motion respected for anyone who prefers it.
+📖 Plain-language rewrites
 
-## How to use it
+Generate a simpler first draft while preserving the original meaning whenever possible.
 
-1. Open the [live tool](https://meyeringn.github.io/plainspeak-policy-explainer/).
-2. Paste any policy text — or click **Load example notice**, or pick a founding document, to see it work.
-3. Click **Analyze the writing**.
-4. Read the grade drop, scan the flagged jargon, and copy the plain-language draft.
+📊 Reading level analysis
 
-Always have a person check the rewrite before using it. The draft is a starting point, not a final answer — this matters even more for historical and legal documents, where a "modernized" sentence can quietly lose meaning that the original wording carried on purpose.
+Measures documents using:
 
-## How it scores
+* Flesch-Kincaid Grade Level
+* Flesch Reading Ease
 
-Short version: reading grade uses **Flesch–Kincaid Grade Level**; ease uses the **Flesch Reading Ease** score; jargon and rewrites come from a curated rule set, now extended with 18th- and 19th-century legal constructions (*hath*, *whereof*, *aforesaid*, *to wit*, and similar). The full math, the rewrite pipeline, and an honest list of limitations are documented in **[METHODOLOGY.md](METHODOLOGY.md)**.
+and visualizes how much simpler the rewritten version becomes.
 
-## Founding documents
+🏛 Expanded government jargon dictionary
 
-The four historical excerpts are transcribed from National Archives source pages and are in the public domain. They're trimmed to a representative, jargon-dense passage rather than embedded in full, to keep this a single lightweight file:
+Detects and explains dozens of common government, legal, transportation, environmental, procurement, disability, and historical legal terms, replacing them with everyday language.
 
-- Declaration of Independence (1776) — archives.gov/founding-docs/declaration-transcript
-- Articles of Confederation (1777) — archives.gov/milestone-documents/articles-of-confederation
-- The Constitution (1787), Preamble + Article I, Section 8 — archives.gov/founding-docs/constitution-transcript
-- Emancipation Proclamation (1863) — archives.gov/exhibits/featured-documents/emancipation-proclamation/transcript.html
+🌎 Multilingual interface
 
-Each excerpt loads with a source citation and a reminder to read the full original before citing the plain-language draft.
+PlainSpeak’s interface is available in:
 
-## Maintenance notes
+* English
+* Español
+* 简体中文
+* Tiếng Việt
 
-- **Retiring the July 4th theme:** in `index.html`, set `PATRIOTIC_DEFAULT = false` in the script (search for "July 4th theme"), or remove the toggle button and the `.patriotic` CSS block entirely once the holiday framing is no longer relevant.
+These represent four of Philadelphia’s most widely spoken languages.
 
-## Tech
+♿ Accessibility-first design
 
-A single `index.html`. No build step, no dependencies to install, no API keys, no server. Hosted on GitHub Pages. Fork it, change the jargon dictionary in the script, and you have a plain-language tool tuned for your own city or agency.
+Built with accessibility from the beginning, including:
 
-## Part of a civic tech portfolio
+* Dyslexia-friendly font
+* High contrast mode
+* Adjustable text size
+* Keyboard accessibility
+* Screen reader announcements
+* Reduced-motion support
+* Skip navigation
+* Semantic HTML throughout
 
-PlainSpeak sits alongside other browser-only tools built on the idea that transit equity, disability justice, and climate action are one connected fight — including CanopyWatch, FloodRisk Philly, the Transit Carbon Calculator, and UpLift. See them all at **[github.com/meyeringn](https://github.com/meyeringn)**.
+📜 Historic document explorer
 
-## License
+Instantly analyze excerpts from:
 
-MIT. Use it, fork it, build on it. Clear public writing should belong to everyone.
+* Declaration of Independence
+* Articles of Confederation
+* United States Constitution
+* Emancipation Proclamation
+* United Nations Convention on the Rights of Persons with Disabilities (CRPD)
 
----
+See how the reading level of historic legal writing compares with modern government documents.
 
-*Built in Philadelphia.*
+🔗 Shareable analyses
+
+Copy a shareable URL containing either:
+
+* your pasted text
+* or one of the included historical documents
+
+to reproduce the same analysis.
+
+⸻
+
+Everything stays in your browser
+
+PlainSpeak is entirely client-side.
+
+There is:
+
+* no server
+* no tracking
+* no analytics
+* no API
+* no AI model running remotely
+
+Nothing leaves your device unless you deliberately copy or share it.
+
+⸻
+
+How it works
+
+1. Open the live site.
+2. Paste any ordinance, policy, regulation, agenda, or legal notice.
+3. Or choose one of the included historical documents.
+4. Click Analyze.
+5. Review:
+    * reading level
+    * jargon explanations
+    * plain-language rewrite
+    * accessibility score improvements
+
+⸻
+
+Reading methodology
+
+Reading difficulty is calculated using:
+
+* Flesch-Kincaid Grade Level
+* Flesch Reading Ease
+
+Plain-language rewrites use a curated rules engine rather than an AI service. The dictionary now includes modern bureaucratic language alongside historical legal terminology frequently found in founding documents.
+
+See METHODOLOGY.md for details.
+
+⸻
+
+Included historical documents
+
+Representative excerpts are included from public-domain sources.
+
+* Declaration of Independence
+* Articles of Confederation
+* Constitution of the United States
+* Emancipation Proclamation
+* United Nations Convention on the Rights of Persons with Disabilities
+
+These excerpts are intended for educational comparison.
+
+The rewritten versions should never be treated as legal or historical replacements for the original texts.
+
+⸻
+
+Technology
+
+A single index.html file.
+
+No frameworks.
+
+No build step.
+
+No installation.
+
+No dependencies.
+
+No backend.
+
+Hosted on GitHub Pages.
+
+Fork it, customize the jargon dictionary, add your own historic documents, or adapt it for your city or organization.
+
+⸻
+
+Roadmap
+
+Future ideas include:
+
+* additional languages
+* downloadable plain-language reports
+* side-by-side comparison view
+* audience-specific rewrites (student, policymaker, general public)
+* readability trends across multiple documents
+* local government document library
+* browser extension for public policy websites
+
+⸻
+
+Part of a civic technology portfolio
+
+PlainSpeak is one of several open-source civic technology projects focused on accessibility, disability justice, climate resilience, and democratic participation.
+
+Other projects include:
+
+* CanopyWatch
+* FloodRisk Philly
+* Transit Carbon Calculator
+* UpLift
+
+More projects:
+
+https://github.com/meyeringn
+
+⸻
+
+License
+
+MIT.
+
+Use it.
+
+Fork it.
+
+Improve it.
+
+Clear government communication should belong to everyone.
+
+⸻
+
+Built in Philadelphia.

@@ -62,6 +62,25 @@
     --focus:#FFE600;
   }
 
+  /* "Founding parchment" theme — a dignified red/white/blue palette for
+     the week of July 4th, built to stay WCAG AA and to tie visually to the
+     historical-documents feature below (cream = parchment, navy + brick
+     red = Republic-era, not flag-kitsch). Toggled by the visitor, defaults
+     on through the Fourth — see JS below for how to flip the default. */
+  html.patriotic {
+    --paper:   #F7F3E8;
+    --card:    #FFFFFF;
+    --ink:     #16233E;
+    --ink-soft:#4A5568;
+    --rule:    #DCD3B8;
+    --accent:  #1B3A6B;
+    --accent-ink: #FFFFFF;
+    --highlight:#A5283A;
+    --flag-ink: #FFFFFF;
+    --improved:#2F6F4F;
+    --focus:   #FFCE00;
+  }
+
   /* Dyslexia-friendly reading mode */
   html.dyslexic {
     --font-body: "OpenDyslexic", "Public Sans", system-ui, sans-serif;
@@ -172,6 +191,21 @@
   }
   .btn-primary:hover { filter: brightness(1.08); border-color: var(--accent); }
 
+  /* ---------- Founding documents loader ---------- */
+  .founding { margin-top: 1.1rem; }
+  .founding-label {
+    font-family: var(--font-mono); font-size: .7rem; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-soft); display: block; margin: 0 0 .5rem;
+  }
+  .founding-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .founding-btn { font-size: .85rem; }
+  .founding-note {
+    margin: .7rem 0 0; font-size: .82rem; color: var(--ink-soft);
+    padding: .6rem .8rem; background: var(--paper); border: 1px solid var(--rule);
+    border-radius: 8px; max-width: 60ch;
+  }
+  .founding-note a { color: var(--accent); }
+
   /* ---------- Results ---------- */
   .results { margin-top: 2.2rem; }
   .results[hidden] { display: none; }
@@ -253,6 +287,12 @@
     font-family: var(--font-mono);
   }
 
+  .share-row {
+    margin-top: 1rem; padding-top: .9rem; border-top: 1px dashed var(--rule);
+    display: flex; flex-wrap: wrap; align-items: center; gap: .6rem;
+  }
+  .share-note { font-size: .8rem; color: var(--ink-soft); }
+
   /* Jargon list */
   ul.jargon { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
   ul.jargon li {
@@ -331,6 +371,9 @@
         <button type="button" id="toggle-dyslexic" aria-pressed="false">
           <span class="dot"></span>Dyslexia-friendly font
         </button>
+        <button type="button" id="toggle-patriotic" aria-pressed="true">
+          <span class="dot"></span>July 4th theme
+        </button>
       </div>
     </div>
   </div>
@@ -352,6 +395,17 @@
       <button type="button" class="btn-primary" id="analyze-btn">Analyze the writing</button>
       <button type="button" id="example-btn">Load example notice</button>
       <button type="button" id="clear-btn">Clear</button>
+    </div>
+
+    <div class="founding" role="group" aria-labelledby="founding-label">
+      <span class="founding-label" id="founding-label">Or try a founding document</span>
+      <div class="founding-row">
+        <button type="button" class="founding-btn" data-doc="declaration">Declaration of Independence</button>
+        <button type="button" class="founding-btn" data-doc="articles">Articles of Confederation</button>
+        <button type="button" class="founding-btn" data-doc="constitution">The Constitution</button>
+        <button type="button" class="founding-btn" data-doc="emancipation">Emancipation Proclamation</button>
+      </div>
+      <p class="founding-note" id="founding-note" hidden></p>
     </div>
 
     <p class="sr-only" role="status" aria-live="polite" id="status"></p>
@@ -384,6 +438,11 @@
 
         <p class="stakes" id="stakes"></p>
         <p class="ease-line" id="ease-line"></p>
+
+        <div class="share-row">
+          <button type="button" id="share-btn">Copy share link</button>
+          <span class="share-note" id="share-note"></span>
+        </div>
       </section>
 
       <!-- Jargon flags -->
@@ -414,7 +473,7 @@
 <footer>
   <div class="wrap">
     <p><strong>How it scores:</strong> reading grade uses the Flesch&ndash;Kincaid grade-level formula; ease uses the Flesch Reading Ease score. Jargon and rewrites come from a curated plain-language rule set.</p>
-    <p><strong>Privacy:</strong> 100% browser-only. Your text never leaves this page.</p>
+    <p><strong>Privacy:</strong> No server, no tracking, no analysis sent anywhere automatically. Text only leaves your browser if you click "Copy share link" and send it yourself.</p>
     <p>Built as part of a civic tech portfolio on plain-language and accessibility. Free to use and fork.</p>
   </div>
 </footer>
@@ -448,6 +507,15 @@
   }
   bindToggle("toggle-contrast", "contrast");
   bindToggle("toggle-dyslexic", "dyslexic");
+
+  /* July 4th theme — defaults ON for the 2026 holiday window.
+     To retire it after the Fourth, change PATRIOTIC_DEFAULT to false
+     (or delete this block and the .patriotic CSS/button once it's no
+     longer relevant). */
+  var PATRIOTIC_DEFAULT = true;
+  if (PATRIOTIC_DEFAULT) root.classList.add("patriotic");
+  document.getElementById("toggle-patriotic").setAttribute("aria-pressed", PATRIOTIC_DEFAULT ? "true" : "false");
+  bindToggle("toggle-patriotic", "patriotic");
 
   /* ---------------- Readability engine ---------------- */
   function countSyllables(word) {
@@ -549,7 +617,35 @@
     [/\bindividuals\b/gi, "people"],
     [/\btelephonic\b/gi, "phone"],
     [/\bsaid\b/gi, "this"],
-    [/\bshall\b/gi, "must"]
+    [/\bshall\b/gi, "must"],
+
+    /* Archaic / 18th-19th century legal constructions — added so PlainSpeak
+       can meaningfully handle founding-era documents (Declaration,
+       Articles of Confederation, Constitution, Emancipation Proclamation),
+       not just modern bureaucratic prose. */
+    [/\bto wit\b/gi, "namely"],
+    [/\bin witness whereof\b/gi, "to prove this"],
+    [/\bknow ye that\b/gi, "know that"],
+    [/\bby these presents\b/gi, "by this document"],
+    [/\bthenceforward\b/gi, "from then on"],
+    [/\bhenceforward\b/gi, "from now on"],
+    [/\baforesaid\b/gi, "already mentioned"],
+    [/\bwhereof\b/gi, "of which"],
+    [/\bwhereby\b/gi, "by which"],
+    [/\bwherein\b/gi, "in which"],
+    [/\bherein\b/gi, "in this"],
+    [/\bthereof\b/gi, "of it"],
+    [/\bthereto\b/gi, "to it"],
+    [/\btherein\b/gi, "in it"],
+    [/\bsundry\b/gi, "various"],
+    [/\bexpressly delegated\b/gi, "clearly given"],
+    [/\bseverally\b/gi, "separately"],
+    [/\bdoth\b/gi, "does"],
+    [/\bhath\b/gi, "has"],
+    [/\bunto\b/gi, "to"],
+    [/\bendeavoured\b/gi, "tried"],
+    [/\bhitherto\b/gi, "until now"],
+    [/\ba firm league of friendship\b/gi, "a strong alliance"]
   ];
 
   function findJargon(text) {
@@ -618,6 +714,10 @@
   function fmt(n) { return (Math.round(n * 10) / 10).toFixed(1); }
 
   var results = document.getElementById("results");
+  var loadedFoundingDocKey = null; // tracks which founding doc (if any) is currently loaded, for cleaner share links
+  document.getElementById("policy-input").addEventListener("input", function () {
+    loadedFoundingDocKey = null;
+  });
 
   function analyze() {
     var text = document.getElementById("policy-input").value.trim();
@@ -725,6 +825,8 @@
 
   document.getElementById("clear-btn").addEventListener("click", function () {
     document.getElementById("policy-input").value = "";
+    loadedFoundingDocKey = null;
+    document.getElementById("founding-note").hidden = true;
     results.hidden = true;
     document.getElementById("status").textContent = "Cleared.";
     document.getElementById("policy-input").focus();
@@ -741,13 +843,126 @@
     }
   });
 
+  /* ---------------- Share link ---------------- */
+  function buildShareUrl() {
+    var text = document.getElementById("policy-input").value;
+    var url = new URL(window.location.href.split("?")[0].split("#")[0]);
+    if (loadedFoundingDocKey) {
+      url.searchParams.set("doc", loadedFoundingDocKey);
+    } else {
+      url.searchParams.set("text", text);
+    }
+    return url.toString();
+  }
+
+  document.getElementById("share-btn").addEventListener("click", function () {
+    var btn = this;
+    var note = document.getElementById("share-note");
+    var link = buildShareUrl();
+    var longLink = !loadedFoundingDocKey && document.getElementById("policy-input").value.length > 1800;
+
+    function done(copied) {
+      btn.textContent = copied ? "Link copied ✓" : "Copy share link";
+      note.textContent = longLink
+        ? "Pasted text makes long links \u2014 some apps may truncate it. If it doesn't open right, copy the text instead."
+        : "Anyone with this link sees the same analysis, pre-loaded.";
+      if (copied) setTimeout(function () { btn.textContent = "Copy share link"; }, 1800);
+    }
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(link).then(function () { done(true); }, function () { done(false); note.textContent = link; });
+    } else {
+      done(false);
+      note.textContent = link;
+    }
+  });
+
   var EXAMPLE =
     "Pursuant to the provisions set forth herein, the Department shall endeavor to facilitate the commencement of construction activities within the aforementioned transit corridor. Notwithstanding any prior notifications that may have been disseminated, residents are hereby advised that, in the event that inclement weather conditions materialize, the aforementioned project timeline may be subject to modification without additional notice. In order to ascertain the current status of said project, individuals are required to utilize the online portal in conjunction with the telephonic helpline, which shall be available on a daily basis for the purpose of disseminating updated information to the maximum extent practicable.";
 
   document.getElementById("example-btn").addEventListener("click", function () {
     document.getElementById("policy-input").value = EXAMPLE;
+    loadedFoundingDocKey = null;
+    document.getElementById("founding-note").hidden = true;
     analyze();
   });
+
+  /* ---------------- Founding documents ----------------
+     Excerpts are transcribed from National Archives source pages and are
+     in the public domain (U.S. government works / pre-1928 publication).
+     Full-length documents are trimmed to a representative, jargon-dense
+     passage rather than embedded in full — this stays a single static
+     file and keeps the "load, read, compare" loop fast. Spelling and
+     capitalization are kept as in the originals; the analyzer treats them
+     as ordinary text either way. */
+  var FOUNDING_DOCS = {
+    declaration: {
+      title: "Declaration of Independence (1776)",
+      source: "National Archives, \u201cDeclaration of Independence: A Transcription,\u201d archives.gov/founding-docs/declaration-transcript",
+      text:
+        "We hold these truths to be self-evident, that all men are created equal, that they are endowed by their Creator with certain unalienable Rights, that among these are Life, Liberty and the pursuit of Happiness. " +
+        "He has abdicated Government here, by declaring us out of his Protection and waging War against us. He has plundered our seas, ravaged our Coasts, burnt our towns, and destroyed the lives of our people. He is at this time transporting large Armies of foreign Mercenaries to compleat the works of death, desolation and tyranny, already begun with circumstances of Cruelty & perfidy scarcely paralleled in the most barbarous ages, and totally unworthy the Head of a civilized nation. " +
+        "We, therefore, the Representatives of the united States of America, in General Congress, Assembled, appealing to the Supreme Judge of the world for the rectitude of our intentions, do, in the Name, and by Authority of the good People of these Colonies, solemnly publish and declare, That these United Colonies are, and of Right ought to be Free and Independent States; that they are Absolved from all Allegiance to the British Crown, and that all political connection between them and the State of Great Britain, is and ought to be totally dissolved; and that as Free and Independent States, they have full Power to levy War, conclude Peace, contract Alliances, establish Commerce, and to do all other Acts and Things which Independent States may of right do. And for the support of this Declaration, with a firm reliance on the protection of divine Providence, we mutually pledge to each other our Lives, our Fortunes and our sacred Honor."
+    },
+    articles: {
+      title: "Articles of Confederation (1777)",
+      source: "National Archives, \u201cArticles of Confederation (1777),\u201d archives.gov/milestone-documents/articles-of-confederation",
+      text:
+        "Article II. Each state retains its sovereignty, freedom and independence, and every Power, Jurisdiction and right, which is not by this confederation expressly delegated to the United States, in Congress assembled. " +
+        "Article III. The said states hereby severally enter into a firm league of friendship with each other, for their common defence, the security of their Liberties, and their mutual and general welfare, binding themselves to assist each other, against all force offered to, or attacks made upon them, or any of them, on account of religion, sovereignty, trade, or any other pretence whatever."
+    },
+    constitution: {
+      title: "The Constitution of the United States (1787), Preamble & Article I, Section 8",
+      source: "National Archives, \u201cThe Constitution of the United States: A Transcription,\u201d archives.gov/founding-docs/constitution-transcript",
+      text:
+        "We the People of the United States, in Order to form a more perfect Union, establish Justice, insure domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of America. " +
+        "The Congress shall have Power To lay and collect Taxes, Duties, Imposts and Excises, to pay the Debts and provide for the common Defence and general Welfare of the United States; but all Duties, Imposts and Excises shall be uniform throughout the United States; To borrow Money on the credit of the United States; To regulate Commerce with foreign Nations, and among the several States, and with the Indian Tribes; To establish an uniform Rule of Naturalization, and uniform Laws on the subject of Bankruptcies throughout the United States; To coin Money, regulate the Value thereof, and of foreign Coin, and fix the Standard of Weights and Measures; To establish Post Offices and post Roads; To make all Laws which shall be necessary and proper for carrying into Execution the foregoing Powers, and all other Powers vested by this Constitution in the Government of the United States, or in any Department or Officer thereof."
+    },
+    emancipation: {
+      title: "Emancipation Proclamation (1863)",
+      source: "National Archives, \u201cTranscript of the Proclamation,\u201d archives.gov/exhibits/featured-documents/emancipation-proclamation/transcript.html",
+      text:
+        "Whereas, on the twenty-second day of September, in the year of our Lord one thousand eight hundred and sixty-two, a proclamation was issued by the President of the United States, containing, among other things, the following, to wit: \u201cThat on the first day of January, in the year of our Lord one thousand eight hundred and sixty-three, all persons held as slaves within any State or designated part of a State, the people whereof shall then be in rebellion against the United States, shall be then, thenceforward, and forever free; and the Executive Government of the United States, including the military and naval authority thereof, will recognize and maintain the freedom of such persons, and will do no act or acts to repress such persons, or any of them, in any efforts they may make for their actual freedom.\u201d " +
+        "And by virtue of the power, and for the purpose aforesaid, I do order and declare that all persons held as slaves within said designated States, and parts of States, are, and henceforward shall be free; and that the Executive government of the United States, including the military and naval authorities thereof, will recognize and maintain the freedom of said persons."
+    }
+  };
+
+  document.querySelectorAll(".founding-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var key = btn.getAttribute("data-doc");
+      loadFoundingDoc(key);
+    });
+  });
+
+  function loadFoundingDoc(key) {
+    var doc = FOUNDING_DOCS[key];
+    if (!doc) return false;
+    document.getElementById("policy-input").value = doc.text;
+    loadedFoundingDocKey = key;
+    var note = document.getElementById("founding-note");
+    note.hidden = false;
+    note.innerHTML = "<strong>" + doc.title + "</strong> \u2014 excerpt, public domain. Source: " + doc.source +
+      ". The plain-language draft below is an automatic first pass, not a legal or historical translation \u2014 read the full original before citing it.";
+    analyze();
+    return true;
+  }
+
+  /* ---------------- Resolve a shared link on load ----------------
+     ?doc=<key> loads a founding-document excerpt by key (short, clean link).
+     ?text=<encoded text> loads arbitrary pasted text (from "Copy share link"
+     on a custom paste). ?text wins if both are somehow present. */
+  (function resolveSharedLink() {
+    var params = new URLSearchParams(window.location.search);
+    var sharedText = params.get("text");
+    var sharedDoc = params.get("doc");
+    if (sharedText) {
+      document.getElementById("policy-input").value = sharedText;
+      loadedFoundingDocKey = null;
+      analyze();
+    } else if (sharedDoc) {
+      loadFoundingDoc(sharedDoc);
+    }
+  })();
 
 })();
 </script>

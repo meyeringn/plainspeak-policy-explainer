@@ -5,7 +5,7 @@
 🔗 **Live tool:** https://meyeringn.github.io/plainspeak-policy-explainer/
 
 ![No backend](https://img.shields.io/badge/backend-none-1C5C54)
-![Privacy](https://img.shields.io/badge/data-never%20leaves%20your%20browser-1C5C54)
+![Privacy](https://img.shields.io/badge/data-stays%20in%20your%20browser-1C5C54)
 ![Accessibility](https://img.shields.io/badge/built%20for-screen%20readers%20%26%20dyslexia-1C5C54)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
@@ -26,8 +26,10 @@ PlainSpeak treats clear writing as a civic access issue, not a style preference.
 - **Drafts a plain-language first version** entirely with rules — no AI call, nothing uploaded.
 - **Shows the before/after grade drop** on an animated reading-grade meter, with the difficulty difference stated in plain numbers.
 - **Translates the score into stakes** — turning a grade number into a sentence about who gets left out.
+- **Loads founding-document excerpts** — the Declaration of Independence, the Articles of Confederation, the Constitution (Preamble + Article I, Section 8), and the Emancipation Proclamation are one click away, so you can see how 18th- and 19th-century legal language scores next to a modern ordinance.
+- **Shares a specific analysis** — "Copy share link" puts the loaded text (or founding-document key) into the URL, so you can send someone the exact before/after you're looking at.
 
-Everything runs in your browser. Your text never leaves the page.
+Everything runs in your browser. Your text never leaves the page except into the link you choose to copy and send.
 
 ## Built to be read every way
 
@@ -36,6 +38,7 @@ The tool is also a small demonstration of the accessibility it argues for. It in
 - A **dyslexia-friendly font** toggle (OpenDyslexic, with a legible fallback).
 - A **high-contrast** mode.
 - **Text-size** controls.
+- A **July 4th theme** toggle — a dignified navy/cream/brick-red "founding parchment" palette, user-controlled and defaulted on for the 2026 holiday window (see Maintenance notes below for how to retire it).
 - A skip link, semantic landmarks, and a clear heading order.
 - **Screen-reader announcements** — results are read aloud through a live region when analysis finishes.
 - Jargon flagged with an **underline and a label**, never by color alone.
@@ -44,15 +47,30 @@ The tool is also a small demonstration of the accessibility it argues for. It in
 ## How to use it
 
 1. Open the [live tool](https://meyeringn.github.io/plainspeak-policy-explainer/).
-2. Paste any policy text — or click **Load example notice** to see it work.
+2. Paste any policy text — or click **Load example notice**, or pick a founding document, to see it work.
 3. Click **Analyze the writing**.
 4. Read the grade drop, scan the flagged jargon, and copy the plain-language draft.
 
-Always have a person check the rewrite before using it. The draft is a starting point, not a final answer.
+Always have a person check the rewrite before using it. The draft is a starting point, not a final answer — this matters even more for historical and legal documents, where a "modernized" sentence can quietly lose meaning that the original wording carried on purpose.
 
 ## How it scores
 
-Short version: reading grade uses **Flesch–Kincaid Grade Level**; ease uses the **Flesch Reading Ease** score; jargon and rewrites come from a curated rule set. The full math, the rewrite pipeline, and an honest list of limitations are documented in **[METHODOLOGY.md](METHODOLOGY.md)**.
+Short version: reading grade uses **Flesch–Kincaid Grade Level**; ease uses the **Flesch Reading Ease** score; jargon and rewrites come from a curated rule set, now extended with 18th- and 19th-century legal constructions (*hath*, *whereof*, *aforesaid*, *to wit*, and similar). The full math, the rewrite pipeline, and an honest list of limitations are documented in **[METHODOLOGY.md](METHODOLOGY.md)**.
+
+## Founding documents
+
+The four historical excerpts are transcribed from National Archives source pages and are in the public domain. They're trimmed to a representative, jargon-dense passage rather than embedded in full, to keep this a single lightweight file:
+
+- Declaration of Independence (1776) — archives.gov/founding-docs/declaration-transcript
+- Articles of Confederation (1777) — archives.gov/milestone-documents/articles-of-confederation
+- The Constitution (1787), Preamble + Article I, Section 8 — archives.gov/founding-docs/constitution-transcript
+- Emancipation Proclamation (1863) — archives.gov/exhibits/featured-documents/emancipation-proclamation/transcript.html
+
+Each excerpt loads with a source citation and a reminder to read the full original before citing the plain-language draft.
+
+## Maintenance notes
+
+- **Retiring the July 4th theme:** in `index.html`, set `PATRIOTIC_DEFAULT = false` in the script (search for "July 4th theme"), or remove the toggle button and the `.patriotic` CSS block entirely once the holiday framing is no longer relevant.
 
 ## Tech
 
@@ -60,7 +78,7 @@ A single `index.html`. No build step, no dependencies to install, no API keys, n
 
 ## Part of a civic tech portfolio
 
-PlainSpeak sits alongside other browser-only tools built on the idea that transit equity, disability justice, and climate action are one connected fight — including CanopyWatch, FloodRisk Philly, the Transit Carbon Calculator, the Climate Civic Action Advisor, and the Climate Equity Policy Simulator. See them all at **[github.com/meyeringn](https://github.com/meyeringn)**.
+PlainSpeak sits alongside other browser-only tools built on the idea that transit equity, disability justice, and climate action are one connected fight — including CanopyWatch, FloodRisk Philly, the Transit Carbon Calculator, and UpLift. See them all at **[github.com/meyeringn](https://github.com/meyeringn)**.
 
 ## License
 
@@ -68,4 +86,4 @@ MIT. Use it, fork it, build on it. Clear public writing should belong to everyon
 
 ---
 
-*Built in Philadelphia. 🧡🖤*
+*Built in Philadelphia.*

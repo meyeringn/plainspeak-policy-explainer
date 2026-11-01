@@ -2,6 +2,8 @@
 
 **A free, browser-only civic accessibility tool that explains public policy in plain language, scores reading difficulty, identifies bureaucratic jargon, and helps more people understand the laws that affect their lives.**
 
+**Data last verified:** November 2026
+
 🔗 **Live tool:** https://meyeringn.github.io/plainspeak-policy-explainer/
 
 ![No backend](https://img.shields.io/badge/backend-none-1C5C54)

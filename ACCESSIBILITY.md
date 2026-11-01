@@ -19,7 +19,7 @@ Automated tools catch only some barriers. Until the manual review is done, pleas
 
 ## Fixed in November 2026
 
-The first automated scan found issues that are now fixed: labeling for the reading-supports toolbar, and the text-size buttons' spoken names, which now include the words you see on screen.
+The first automated scan found issues that are now fixed: labeling for the reading-supports toolbar and the text-size buttons' spoken names (now matching the words you see on screen).
 
 ## Known issues
 

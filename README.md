@@ -103,7 +103,7 @@ PlainSpeak is entirely client-side.
 There is:
 
 * no server
-* no tracking
+* no tracking cookies (page visits are counted anonymously with GoatCounter)
 * no analytics
 * no API
 * no AI model running remotely
